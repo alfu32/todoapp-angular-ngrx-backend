@@ -91,16 +91,20 @@ exports.updateTodo = async function (todo) {
 }
 
 exports.deleteTodo = async function (id) {
-
     // Delete the Todo
-
+    var deleted;
+    var deletedResultN;
     try {
-        var deleted = await ToDo.remove({ _id: id })
-        if (deleted.result.n === 0) {
-            throw Error("Todo Could not be deleted")
+        deleted = await ToDo.remove({ _id: id })
+        deletedResultN = deleted.n;
+        if (deletedResultN === 0) {
+            throw Error(`Todo ${id} was not deleted`)
         }
-        return deleted
+        return deleted;
     } catch (e) {
-        throw Error("Error Occured while Deleting the Todo")
+        // throw Error(`Error Occured while removing the Todo ${e.message}`)
+        throw Error(`Deleted result error
+        ${e.message}
+        deleted:${JSON.stringify(deleted, null, "  ")}`);
     }
 }
